@@ -14,7 +14,7 @@
 
     <!-- 菜品表格 -->
     <div class="table-container">
-      <div class="table table1" style="background-color: red;" ref="table1ContainerRef">
+      <div class="table table1" style="background-color: #fff;" ref="table1ContainerRef">
         <el-table :data="tableData.specialty" ref="table1Ref">
           <el-table-column prop="name" label="菜品" align="center" />
           <el-table-column prop="price" label="价格" align="center">
@@ -30,7 +30,7 @@
         </el-table>
       </div>
 
-      <div class="table table2" style="background-color: skyblue;" ref="table2ContainerRef">
+      <div class="table table2" style="background-color: #fff;" ref="table2ContainerRef">
         <el-table :data="tableData.fish" ref="table2Ref">
           <el-table-column prop="name" label="菜品" align="center" />
           <el-table-column prop="price" label="价格" align="center">
@@ -46,7 +46,7 @@
         </el-table>
       </div>
 
-      <div class="table table3" style="background-color: green;" ref="table3ContainerRef">
+      <div class="table table3" style="background-color: #fff;" ref="table3ContainerRef">
         <el-table :data="[...tableData.shrimp, ...tableData.crab]" ref="table3Ref">
           <el-table-column prop="name" label="菜品" align="center" />
           <el-table-column prop="price" label="价格" align="center">
@@ -62,7 +62,7 @@
         </el-table>
       </div>
 
-      <div class="table table4" style="background-color: yellow;" ref="table4ContainerRef">
+      <div class="table table4" style="background-color: #fff;" ref="table4ContainerRef">
         <el-table :data="tableData.shellfish" ref="table4Ref">
           <el-table-column prop="name" label="菜品" align="center" />
           <el-table-column prop="price" label="价格" align="center">
@@ -82,7 +82,7 @@
 </template>
 
 <script setup>
-import foodData from '../testdata.js'
+import foodData from '../testdata-old-change.js'
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import { Autoplay, EffectFade } from 'swiper/modules'
 import 'swiper/css'
@@ -100,8 +100,7 @@ const slides = ref(
   }))
 )
 
-// const modules = [EffectFade, Autoplay, Pagination]
-// const modules = [EffectFade, Navigation, Pagination]
+// const modules = [EffectFade, Navigation, Pagination, Autoplay]
 const modules = [EffectFade, Autoplay]
 // 菜品表格数据
 const tableData = ref(foodData)
@@ -166,16 +165,18 @@ onMounted(() => {
 .price-container {
   width: 100%;
   height: 100%;
-  background-color: pink;
+  // background-color: pink;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-around;
+  background-image: url("../assets/bg/(1).jpg");
 
   .swiper {
     width: 1200px;
     height: 675px;
     margin-right: 20px;
+    margin-left: 20px;
 
     .swiper-img {
       width: 1200px;
@@ -190,12 +191,18 @@ onMounted(() => {
     align-items: center;
     justify-content: space-between;
     flex: 1;
-  }
+    margin-right: 20px;
+    opacity: .8;
 
-  .table {
-    width: 400px;
-    height: 675px;
-    background-color: #fff;
+    .table {
+      width: 400px;
+      height: 675px;
+      background-color: #fff;
+      border: 1px solid #000;
+      overflow: hidden;
+    }
+    
+
   }
 
 }
