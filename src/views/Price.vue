@@ -1,86 +1,112 @@
 <template>
   <div class="price-container">
     <!-- 轮播图 -->
-    <swiper class="swiper" :spaceBetween="30" :effect="'fade'" :speed="2000" :pagination="{
-      clickable: true,
-    }" :autoplay="{
+    <div class="left">
+      <div class="logo">
+        <img src="../assets/logo.png" alt="">
+      </div>
+      <img class="swiper" src="../assets/images/2.jpg" alt="swiper image">
+      <!-- <swiper class="swiper" :spaceBetween="30" :effect="'fade'" :speed="2000" :pagination="{
+        clickable: true,
+      }" :autoplay="{
       delay: 2500,
       disableOnInteraction: false,
     }" :loop="true" :modules="modules">
-      <swiper-slide v-for="slide in slides" :key="slide.id">
-        <img :src="slide.src" class="swiper-img">
-      </swiper-slide>
-    </swiper>
+        <swiper-slide v-for="slide in slides" :key="slide.id">
+          <img :src="slide.src" class="swiper-img">
+        </swiper-slide>
+      </swiper> -->
+    </div>
 
     <!-- 菜品表格 -->
-    <div class="table-container">
-      <div class="table table1" style="background-color: red;" ref="table1ContainerRef">
-        <el-table :data="tableData1" ref="table1Ref">
+    <div class="table-container" :style="tableData4.length == 0 ? `justify-content: space-evenly;` : ``">
+      <div class="table table1" ref="table1ContainerRef">
+        <el-table :data="tableData1" ref="table1Ref" header-row-class-name="table-header"
+          header-cell-class-name="table-header-cell" :row-class-name="getRowClass" :cell-class-name="getCellClass">
           <el-table-column prop="name" label="菜品" align="center" />
           <el-table-column prop="ingredients" label="主料/做法" align="center">
             <template #default="scope">
-              <div v-if="scope.row.title" style="background-color: yellow;">{{ scope.row.title}}</div>
+              <div v-if="scope.row.title">{{ scope.row.title }}</div>
               <span v-else>{{scope.row.ingredients.length > 0 ? scope.row.ingredients.map(i =>
                 `${i.name}元/${i.weight}`).join('、') : scope.row.method.join('/')}}</span>
             </template>
           </el-table-column>
           <el-table-column prop="price" label="价格" align="center">
             <template #default="scope">
-              {{scope.row.specifications.map(i => `${i.price}元/${i.unit}`).join('、')}}
+              <div v-for="(i, index) in scope.row.specifications" :key="index">
+                <span class="price">{{ `${i.price}元` }}</span>/<span class="unit">{{ i.unit }}</span><span
+                  v-if="index + 1 != scope.row.specifications.length">、</span>
+              </div>
+              <!-- {{scope.row.specifications.map(i => `${i.price}元/${i.unit}`).join('、')}} -->
             </template>
           </el-table-column>
         </el-table>
       </div>
 
-      <div v-if="overflowIndexArr.length > 0" class="table table2" style="background-color: skyblue;" ref="table2ContainerRef">
-        <el-table :data="tableData2" ref="table2Ref" :show-header="false">
+      <div v-if="overflowIndexArr.length > 0" class="table table2" ref="table2ContainerRef">
+        <el-table :data="tableData2" ref="table2Ref" header-row-class-name="table-header"
+          header-cell-class-name="table-header-cell" :row-class-name="getRowClass" :cell-class-name="getCellClass">
           <el-table-column prop="name" label="菜品" align="center" />
           <el-table-column prop="ingredients" label="主料/做法" align="center">
             <template #default="scope">
-              <div v-if="scope.row.title" style="background-color: yellow;">{{ scope.row.title }}</div>
+              <div v-if="scope.row.title">{{ scope.row.title }}</div>
               <span v-else>{{scope.row.ingredients.length > 0 ? scope.row.ingredients.map(i =>
                 `${i.name}元/${i.weight}`).join('、') : scope.row.method.join('/')}}</span>
             </template>
           </el-table-column>
           <el-table-column prop="price" label="价格" align="center">
             <template #default="scope">
-              {{scope.row.specifications.map(i => `${i.price}元/${i.unit}`).join('、')}}
+              <div v-for="(i, index) in scope.row.specifications" :key="index">
+                <span class="price">{{ `${i.price}元` }}</span>/<span class="unit">{{ i.unit }}</span><span
+                  v-if="index + 1 != scope.row.specifications.length">、</span>
+              </div>
+              <!-- {{scope.row.specifications.map(i => `${i.price}元/${i.unit}`).join('、')}} -->
             </template>
           </el-table-column>
         </el-table>
       </div>
 
-      <div v-if="overflowIndexArr.length > 1" class="table table3" style="background-color: green;" ref="table3ContainerRef">
-        <el-table :data="tableData3" ref="table3Ref" :show-header="false">
+      <div v-if="overflowIndexArr.length > 1" class="table table3" ref="table3ContainerRef">
+        <el-table :data="tableData3" ref="table3Ref" header-row-class-name="table-header"
+          header-cell-class-name="table-header-cell" :row-class-name="getRowClass" :cell-class-name="getCellClass">
           <el-table-column prop="name" label="菜品" align="center" />
           <el-table-column prop="ingredients" label="主料/做法" align="center">
             <template #default="scope">
-              <div v-if="scope.row.title" style="background-color: yellow;">{{ scope.row.title }}</div>
+              <div v-if="scope.row.title">{{ scope.row.title }}</div>
               <span v-else>{{scope.row.ingredients.length > 0 ? scope.row.ingredients.map(i =>
                 `${i.name}元/${i.weight}`).join('、') : scope.row.method.join('/')}}</span>
             </template>
           </el-table-column>
           <el-table-column prop="price" label="价格" align="center">
             <template #default="scope">
-              {{scope.row.specifications.map(i => `${i.price}元/${i.unit}`).join('、')}}
+              <div v-for="(i, index) in scope.row.specifications" :key="index">
+                <span class="price">{{ `${i.price}元` }}</span>/<span class="unit">{{ i.unit }}</span><span
+                  v-if="index + 1 != scope.row.specifications.length">、</span>
+              </div>
+              <!-- {{scope.row.specifications.map(i => `${i.price}元/${i.unit}`).join('、')}} -->
             </template>
           </el-table-column>
         </el-table>
       </div>
 
-      <div v-if="overflowIndexArr.length > 2" class="table table4" style="background-color: yellow;" ref="table4ContainerRef">
-        <el-table :data="tableData4" ref="table4Ref" :show-header="false">
+      <div v-if="overflowIndexArr.length > 2" class="table table4" ref="table4ContainerRef">
+        <el-table :data="tableData4" ref="table4Ref" header-row-class-name="table-header"
+          header-cell-class-name="table-header-cell" :row-class-name="getRowClass" :cell-class-name="getCellClass">
           <el-table-column prop="name" label="菜品" align="center" />
           <el-table-column prop="ingredients" label="主料/做法" align="center">
             <template #default="scope">
-              <div v-if="scope.row.title" style="background-color: yellow;">{{ scope.row.title }}</div>
+              <div v-if="scope.row.title">{{ scope.row.title }}</div>
               <span v-else>{{scope.row.ingredients.length > 0 ? scope.row.ingredients.map(i =>
                 `${i.name}元/${i.weight}`).join('、') : scope.row.method.join('/')}}</span>
             </template>
           </el-table-column>
           <el-table-column prop="price" label="价格" align="center">
             <template #default="scope">
-              {{scope.row.specifications.map(i => `${i.price}元/${i.unit}`).join('、')}}
+              <div v-for="(i, index) in scope.row.specifications" :key="index">
+                <span class="price">{{ `${i.price}元` }}</span>/<span class="unit">{{ i.unit }}</span><span
+                  v-if="index + 1 != scope.row.specifications.length">、</span>
+              </div>
+              <!-- {{scope.row.specifications.map(i => `${i.price}元/${i.unit}`).join('、')}} -->
             </template>
           </el-table-column>
         </el-table>
@@ -132,6 +158,30 @@ let tableData4 = ref([])
 
 console.log(slides.value)
 
+function getRowClass(data) {
+  let classNameStr = 'table-row'
+  // console.log('getRowClass', data)
+  if (data.row.title) {
+    classNameStr += ' table-row-title title-size'
+  }
+  return classNameStr
+}
+
+function getCellClass(data) {
+  let classNameStr = 'table-cell'
+  // console.log('getCellClass', data)
+  if (data.column.property === 'name') {
+    classNameStr += ' food-name-size'
+  }
+  if (!data.row.title && data.column.property === "ingredients") {
+    classNameStr += ' method-size'
+  }
+  if (data.column.property === "price") {
+    classNameStr += ' prize-size'
+  }
+  return classNameStr
+}
+
 
 const existedCategory = tableData.value.map(item => item.category)
 console.log('existedCategory', existedCategory)
@@ -162,7 +212,8 @@ const generateTableData = () => {
     console.log('table', table)
     console.log('containerHeight', containerHeight)
     console.log('tableHeight', table.clientHeight)
-
+    const headerHeight = table.querySelectorAll('.table1 .el-table__header thead tr')[0].clientHeight
+    console.log('标题高度', headerHeight)
     // 获取所有行元素
     const rows = table.querySelectorAll('.table1 .el-table__header thead tr, .table1 .el-table__body tbody tr')
     const rowArr = Array.from(rows)
@@ -186,6 +237,7 @@ const generateTableData = () => {
         i = i - 1
         overflowIndexArr.value.push(i)
         sumHeight = 0 // 重置累计高度，开始新一轮计算
+        sumHeight += headerHeight // 新一轮计算，先加上标题高度
       }
     }
     console.log('overflowIndexArr', overflowIndexArr.value)
@@ -222,18 +274,41 @@ onMounted(() => {
 .price-container {
   width: 100%;
   height: 100%;
-  background-color: #fff;
+  // background-color: #fff;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-around;
-  background-image: url("../assets/bg/黑白页岩\ \(54\).jpg");
+  // background-image: url("../assets/bg/\(1\).jpg");
+  // background-image: url("../assets/bg/\(2\).jpg");  // 浅色背景
+  // background-image: linear-gradient(rgba(7, 0, 49, 0.7), rgba(7, 0, 49, 0.7)),  url("../assets/bg/\(2\).jpg");  // 浅色背景
+  background-image: linear-gradient(rgba(7, 0, 49, 0.5), rgba(7, 0, 49, 0.5)),  url("../assets/bg/黑白页岩\ \(54\).jpg");  // 深色背景
+  
+  // background-image: url("../assets/bg/\(3\).jpg");
+  // background-image: url("../assets/bg/黑白页岩\ \(54\).jpg");   // 深色背景
+  // background-image: url("../assets/bg/黑白页岩\ \(68\).jpg");
+  // background-image: url("../assets/bg/黑白页岩\ \(89\).jpg");
 
-  .swiper {
+  .left {
     width: 1200px;
     height: 675px;
     margin-right: 20px;
     margin-left: 20px;
+    position: relative;
+
+    .logo {
+      position: absolute;
+      top: 20px;
+      left: 0px;
+      z-index: 999;
+    }
+
+    .swiper {
+      width: 1200px;
+      height: 675px;
+      // border: 2px solid #000;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    }
 
     .swiper-img {
       width: 1200px;
@@ -249,28 +324,78 @@ onMounted(() => {
     justify-content: space-between;
     flex: 1;
     margin-right: 20px;
-    opacity: .8;
 
-    .table {
+    & .table {
       width: 400px;
       height: 675px;
-      background-color: #fff;
+      background-color: transparent;
+      font-family: STKaiti !important;
+      // font-family: "Noto Serif SC", serif;  // 思源宋体
+      // font-family: "Noto Sans SC", sans-serif;  // 思源黑
+
+      & .el-table {
+        background-color: transparent;
+        color: #fff; //深色背景
+        // color: #212121;   //浅色背景
+        & :deep(.el-table__inner-wrapper)::before {
+          height: 0.5px;
+          // background-color: #616161 !important;  //浅色主题
+        }
+      }
+
+      & :deep(.table-header) {
+        background-color: transparent;
+        color: #fff; //深色背景
+        // color: #212121;  //浅色背景
+        font-size: 23px;
+      }
+
+      & :deep(.table-header-cell) {
+        background-color: transparent;
+        // border-bottom-color: #616161 !important;  //浅色背景
+      }
+
+      & :deep(.table-row) {
+        background-color: transparent;
+      }
+
+      & :deep(.table-row-title) {
+        background-color: transparent;
+
+        & td {
+          font-weight: bold;
+          // border: 0px solid black !important; 
+        }
+      }
+
+      & :deep(.table-cell) {
+        background-color: transparent;
+        // border-bottom-color: #616161 !important;  //浅色背景
+      }
     }
 
-    .title-size {
-      font-size: 13.5px;
+    :deep(.title-size) {
+      font-size: 23px;
+      font-weight: bold;
     }
 
-    .food-name-size {
-      font-size: 12px;
+    :deep(.food-name-size) {
+      font-size: 21px;
+      font-weight: bold;
     }
 
-    .prize-size {
-      font-size: 10px;
+    :deep(.prize-size) {
+      font-size: 18px;
+      font-weight: bold;
+
+      & .price {
+        font-size: 21px;
+      }
     }
 
-    .method-size {
-      font-size: 5.5px;
+    :deep(.method-size) {
+      font-size: 16px;
+      font-weight: bold;
     }
   }
 }
