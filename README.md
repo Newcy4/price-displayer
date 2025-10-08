@@ -1,14 +1,8 @@
 # price-displayer
 
-This template should help get you started developing with Vue 3 in Vite.
 
-## Recommended IDE Setup
+酒店价格展示大屏，使用 vue3 + elementUI 纯前端实现，价格展示表格使用了动态分割算法，实现数据列表在多个表格间自适应排列
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
 
 ## Project Setup
 

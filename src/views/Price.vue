@@ -263,7 +263,7 @@ const generateTableData = () => {
 
 onMounted(() => {
   setTimeout(() => {
-    generateTableData()
+    generateTableData()  // 放到下一个宏任务中执行，确保DOM渲染完成，才能获取样式
   }, 0)
 })
 
