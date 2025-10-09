@@ -6,10 +6,26 @@
   "engines": {
     "node": "^20.19.0 || >=22.12.0"
   },
+  "main": "index.html",
+  "window": {
+    "title": "价格展示器",
+    "icon": "./dist/favicon.ico",
+    "width": 1440,
+    "height": 360,
+    "min_width": 720,
+    "min_height": 180,
+    "toolbar": false,
+    "frame": true,
+    "fullscreen": false,
+    "resizable": true
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "dev:nw": "nw .",
+    "build:nw": "npm run build && cp package.json ./dist && node ./nw-build/win.js",
+    "build-only:nw": "cp package.json ./dist && node ./nw-build/win.js"
   },
   "dependencies": {
     "element-plus": "^2.11.4",
@@ -19,6 +35,8 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.1",
+    "nw": "^0.104.1",
+    "nw-builder": "^4.16.0",
     "sass": "^1.93.2",
     "sass-loader": "^16.0.5",
     "unplugin-auto-import": "^20.2.0",
