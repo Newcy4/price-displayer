@@ -2,7 +2,7 @@
   <div class="price-container">
     <!-- 轮播图 -->
     <div class="left">
-      <div class="logo">
+      <div class="logo"  @click="$router.push('/dashboard')">
         <img src="../assets/logo.png" alt="">
       </div>
       <img class="swiper" src="../assets/images/2.jpg" alt="swiper image">
