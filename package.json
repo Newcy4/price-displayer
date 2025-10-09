@@ -9,7 +9,7 @@
   "main": "index.html",
   "window": {
     "title": "价格展示器",
-    "icon": "./dist/favicon.ico",
+    "icon": "./dist/icon.ico",
     "width": 1440,
     "height": 360,
     "min_width": 720,
@@ -25,7 +25,9 @@
     "preview": "vite preview",
     "dev:nw": "nw .",
     "build:nw": "npm run build && cp package.json ./dist && node ./nw-build/win.js",
-    "build-only:nw": "cp package.json ./dist && node ./nw-build/win.js"
+    "build:nw-mac": "npm run build && cp package.json ./dist && node ./nw-build/osx.js",
+    "build-only:nw": "cp package.json ./dist && node ./nw-build/win.js",
+    "build-only:nw-mac": "cp package.json ./dist && node ./nw-build/osx.js"
   },
   "dependencies": {
     "element-plus": "^2.11.4",

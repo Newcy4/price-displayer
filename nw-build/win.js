@@ -1,9 +1,9 @@
 /*
  * @Date: 2025-10-09 16:58:47
  * @LastEditors: Newcy4 newcy44@gmail.com
- * @LastEditTime: 2025-10-09 17:06:12
+ * @LastEditTime: 2025-10-09 18:12:52
  * @FilePath: /price-displayer/nw-build/win.js
- * @Description: nw 打包配置文件
+ * @Description: nw 打包配置文件 window 版本
  */
 // 
 import nwbuild from 'nw-builder';
@@ -14,14 +14,14 @@ await nwbuild({
   platform: 'win',
   arch: 'x64',
   srcDir: './dist',
-  // cacheDir: './node_modules/nw',
+  cacheDir: './node_modules/nw/cache',
   outDir: './nw-out/win/price-displayer',
   glob: false,
   logLevel: 'debug',
   app: {
-    name: 'Price Displayer',
+    name: '杭越菜品显示',
     /* File path of icon from where it is copied. */
-    icon: './dist/favicon.ico',
+    icon: './dist/icon.ico',
     version: '0.0.0',
     comments: 'Diagnostic information',
     company: 'NW.js Utilities',
