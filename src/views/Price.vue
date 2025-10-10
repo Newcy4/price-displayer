@@ -289,9 +289,9 @@ onMounted(() => {
   align-items: center;
   justify-content: space-around;
   // background-image: url("../assets/bg/\(1\).jpg");
-  // background-image: url("../assets/bg/\(2\).jpg");  // 浅色背景
+  background-image: url("../assets/bg/\(2\).jpg");  // 浅色背景
   // background-image: linear-gradient(rgba(7, 0, 49, 0.7), rgba(7, 0, 49, 0.7)),  url("../assets/bg/\(2\).jpg");  // 浅色背景
-  background-image: linear-gradient(rgba(7, 0, 49, 0.5), rgba(7, 0, 49, 0.5)),  url("../assets/bg/黑白页岩\ \(54\).jpg");  // 深色背景
+  // background-image: linear-gradient(rgba(7, 0, 49, 0.5), rgba(7, 0, 49, 0.5)),  url("../assets/bg/黑白页岩\ \(54\).jpg");  // 深色背景
   
   // background-image: url("../assets/bg/\(3\).jpg");
   // background-image: url("../assets/bg/黑白页岩\ \(54\).jpg");   // 深色背景
@@ -344,24 +344,24 @@ onMounted(() => {
 
       & .el-table {
         background-color: transparent;
-        color: #fff; //深色背景
-        // color: #212121;   //浅色背景
+        // color: #fff; //深色背景
+        color: #212121;   //浅色背景
         & :deep(.el-table__inner-wrapper)::before {
           height: 0.5px;
-          // background-color: #616161 !important;  //浅色主题
+          background-color: #616161 !important;  //浅色主题
         }
       }
 
       & :deep(.table-header) {
         background-color: transparent;
-        color: #fff; //深色背景
-        // color: #212121;  //浅色背景
+        // color: #fff; //深色背景
+        color: #212121;  //浅色背景
         font-size: 23px;
       }
 
       & :deep(.table-header-cell) {
         background-color: transparent;
-        // border-bottom-color: #616161 !important;  //浅色背景
+        border-bottom-color: #616161 !important;  //浅色背景
       }
 
       & :deep(.table-row) {
@@ -379,7 +379,7 @@ onMounted(() => {
 
       & :deep(.table-cell) {
         background-color: transparent;
-        // border-bottom-color: #616161 !important;  //浅色背景
+        border-bottom-color: #616161 !important;  //浅色背景
       }
     }
 

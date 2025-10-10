@@ -1,21 +1,24 @@
 <!--
  * @Date: 2025-10-08 16:48:01
  * @LastEditors: Newcy4 newcy44@gmail.com
- * @LastEditTime: 2025-10-10 15:55:59
+ * @LastEditTime: 2025-10-10 17:28:33
  * @FilePath: /price-displayer/src/views/Dashboard.vue
 -->
 <template>
   <div class="dashboard-container">
-    <el-header>
-<el-button @click="$router.push('/')">回到首页</el-button>
+    <el-header style="display: flex; flex-direction: row; align-items: center; background-color: #ecf5ff; color: #409eff;">
+      <img src="../../public/icon.ico" alt="" style="margin-left: 30px; height: 40px;">
+      <h1 style="font-weight: bold; font-size: 30px; margin-left: 10px;">杭越菜品数据管理后台</h1>
+      <el-button type="primary" @click="$router.push('/')" style="margin-left: 30px;">回到首页</el-button>
+      <el-button type="danger" plain style="margin-left: auto;" @click="deleteAllData">恢复出厂数据</el-button>
     </el-header>
     <el-main>
     <el-row :gutter="0" justify="space-around">
       <el-col v-for="itemData in tableData" :span="4">
         <div
-          style="height: 50px;width: 100%; background-color: #ecf5ff; font-size:25px; line-height: 50px; text-align: center; color: #409eff;">
+          style="height: 30px;width: 100%; background-color: #ecf5ff; font-size:20px; line-height: 30px; text-align: center; color: #409eff;">
           {{ itemData.category }}</div>
-        <el-table :data="itemData.data" style="width: 100%" max-height="550" highlight-current-row scrollbar-always-on>
+        <el-table :data="itemData.data" style="width: 100%" max-height="600" highlight-current-row scrollbar-always-on>
           <el-table-column prop="name" label="菜品" align="center" />
           <el-table-column prop="ingredients" label="主料/做法" align="center">
             <template #default="scope">
@@ -39,7 +42,7 @@
     </el-row>
     </el-main>
 
-    <el-dialog v-model="isDialogVisible" title="修改菜品信息" width="500">
+    <el-dialog v-model="isDialogVisible" title="修改菜品信息" width="500" draggable>
       <el-form :model="formData">
         <el-form-item label="菜名" label-width="50px">
           <el-input v-model="formData.name" autocomplete="off" />
@@ -73,12 +76,29 @@
             aria-label="请输入做法，然后 Enter 回车保存" />
         </el-form-item>
         <el-divider border-style="dashed" />
-        <!-- <el-form-item label="Zones" label-width="140px">
-        <el-select v-model="formData.name" placeholder="Please select a zone">
-          <el-option label="Zone No.1" value="shanghai" />
-          <el-option label="Zone No.2" value="beijing" />
-        </el-select>
-      </el-form-item> -->
+        <el-form-item label="价钱" label-width="50px">
+          <el-table :data="formData.specifications" style="width: 100%">
+            <el-table-column prop="name" label="金额" align="center">
+              <template #default="scope">
+                <el-input v-model="scope.row.price" autocomplete="off" />
+              </template>
+            </el-table-column>
+            <el-table-column prop="weight" label="单位" align="center">
+              <template #default="scope">
+                <el-input v-model="scope.row.unit" autocomplete="off" />
+              </template>
+            </el-table-column>
+            <el-table-column label="操作" align="center">
+              <template #default="scope">
+                <el-button type="primary" plain round
+                  @click="formData.specifications.splice(scope.$index, 1)">删除</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+          <el-button class="mt-4" style="width: 100%" @click="formData.specifications.push({ name: '', weight: '' })">
+            添加价钱规格
+          </el-button>
+        </el-form-item>
       </el-form>
       <template #footer>
       <div class="dialog-footer">
@@ -92,8 +112,10 @@
 </template>
 
 <script setup>
-// import foodData from '../testdata.js'
+import localData from '../testdata.js'
 import { ref } from 'vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
+
 
 const cateSort = ['招牌', '鱼类', '虾类', '蟹类', '贝类']
 const isDialogVisible = ref(false)
@@ -105,7 +127,11 @@ const isDialogVisible = ref(false)
 // const crabData = ref(...foodData.filter(item => item.category === '蟹类'))
 // const shellData = ref(...foodData.filter(item => item.category === '贝类'))
 
-const foodData = JSON.parse(localStorage.getItem('foodData') || '[]')
+let foodData = JSON.parse(localStorage.getItem('foodData') || '[]')
+if (foodData.length === 0) {
+  foodData = localData
+  localStorage.setItem('foodData', JSON.stringify(localData))  // 初始化时保存到本地存储
+}
 
 const tableData = ref(cateSort.map(cate => {
   // console.log('测试', foodData.filter(item => item.category === cate)[0].data)
@@ -136,7 +162,7 @@ function changeData(row) {
 
 
 function resetData (data) {
-  formData.value = tempFormData.value
+  formData.value = JSON.parse(JSON.stringify(tempFormData.value))  // 恢复到修改前的数据
 }
 
 function saveData() {
@@ -149,6 +175,36 @@ function saveData() {
   }
   localStorage.setItem('foodData', JSON.stringify(tableData.value))  // 保存到本地存储
   isDialogVisible.value = false
+}
+
+function deleteAllData() {
+  ElMessageBox.confirm(
+    '此操作将导致所有自定义数据被清除，重新恢复至出厂数据，确认吗?',
+    'Warning',
+    {
+      confirmButtonText: '确认',
+      cancelButtonText: '取消',
+      confirmButtonClass: 'el-button--danger',
+      type: 'warning',
+      title: '请确认是否恢复出厂数据',
+    }
+  )
+    .then(() => {
+      localStorage.removeItem('foodData')
+      setTimeout(() => {
+        location.reload()  // 刷新页面
+      }, 3000)
+      ElMessage({
+        type: 'warning',
+        message: '已恢复出厂数据，3秒后将刷新页面',
+      })
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: '操作已取消',
+      })
+    })
 }
 
 </script>
