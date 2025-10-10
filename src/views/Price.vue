@@ -1,15 +1,17 @@
 <template>
   <div class="price-container">
+    <FullscreenToggle style="position: absolute; right: 0; top: 0; z-index: 999;" />
     <!-- 轮播图 -->
     <div class="left">
       <div class="logo" @click="$router.push('/dashboard')">
         <img src="../assets/logo.png" alt="">
       </div>
-      <video class="swiper" v-if="false" src="../../public/宣传视频.mp4" controls autoplay muted loop
+      <!-- 解除注释就可以使用 -->
+      <!-- <video class="swiper" v-if="false" src="../../public/宣传视频.mp4" controls autoplay muted loop
         controlsList="nodownload nofullscreen" disablePictureInPicture playsinline preload="auto" crossorigin="anonymous">
         <source src="../../public/宣传视频.mp4" type="video/mp4">
         您的浏览器不支持HTML5视频
-      </video>
+      </video> -->
       <img v-if="false" class="swiper" src="../assets/images/2.jpg" alt="swiper image" />
       <swiper v-if="true" class="swiper" :spaceBetween="30" :effect="'fade'" :speed="2000" :pagination="{
         clickable: true,
@@ -124,6 +126,7 @@
 import foodData from '../testdata.js'
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import { Autoplay, EffectFade } from 'swiper/modules'
+import FullscreenToggle from '@/components/FullscreenToggle.vue';
 import 'swiper/css'
 import 'swiper/css/effect-fade'
 import 'swiper/css/pagination'
