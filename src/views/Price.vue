@@ -5,8 +5,8 @@
       <div class="logo"  @click="$router.push('/dashboard')">
         <img src="../assets/logo.png" alt="">
       </div>
-      <img class="swiper" src="../assets/images/2.jpg" alt="swiper image">
-      <!-- <swiper class="swiper" :spaceBetween="30" :effect="'fade'" :speed="2000" :pagination="{
+      <img v-if="true" class="swiper" src="../assets/images/2.jpg" alt="swiper image" />
+      <swiper v-else class="swiper" :spaceBetween="30" :effect="'fade'" :speed="2000" :pagination="{
         clickable: true,
       }" :autoplay="{
       delay: 2500,
@@ -15,7 +15,7 @@
         <swiper-slide v-for="slide in slides" :key="slide.id">
           <img :src="slide.src" class="swiper-img">
         </swiper-slide>
-      </swiper> -->
+      </swiper>
     </div>
 
     <!-- 菜品表格 -->
@@ -123,7 +123,7 @@ import 'swiper/css'
 import 'swiper/css/effect-fade'
 import 'swiper/css/pagination'
 
-
+const localData = JSON.parse(localStorage.getItem('foodData') || '[]')
 
 import { ref, onMounted, nextTick, watch } from 'vue'
 // 动态生成图片路径数组
@@ -138,7 +138,16 @@ const slides = ref(
 // const modules = [EffectFade, Navigation, Pagination]
 const modules = [EffectFade, Autoplay]
 // 菜品表格数据
-const tableData = ref(foodData)
+let tableData =  ref([])
+if (localData.length > 0) {
+  tableData.value = localData
+  console.log('使用本地存储的数据',tableData.value)
+} else {
+  tableData.value = foodData
+  console.log('使用默认的测试数据', tableData.value)
+  localStorage.setItem('foodData', JSON.stringify(foodData))  // 初始化时存储到本地
+}
+
 
 
 let table1ContainerRef = ref(null)
@@ -217,9 +226,9 @@ const generateTableData = () => {
     // 获取所有行元素
     const rows = table.querySelectorAll('.table1 .el-table__header thead tr, .table1 .el-table__body tbody tr')
     const rowArr = Array.from(rows)
-    console.log('第一列的元素：', rowArr)
+    // console.log('第一列的元素：', rowArr)
     const rowHeightArr = rowArr.map(row => row.clientHeight)
-    console.log('第一列的元素所有高度数组：', rowHeightArr)
+    // console.log('第一列的元素所有高度数组：', rowHeightArr)
     // let overflowIndexArr = []  // 记录超过容器高度的行索引
     // 循环计算，记录超过容器高度的行索引，最多记录4个
     let sumHeight = 0 // 每轮累计高度
@@ -227,7 +236,7 @@ const generateTableData = () => {
     for (let i = 0; i < rowHeightArr.length && overflowIndexArr.value.length <= 4; i++) {
       circleCount++
       sumHeight += rowHeightArr[i]
-      console.log(`第 ${i + 1} 行高度:`, rowHeightArr[i], '累计高度:', sumHeight, '容器高度：', containerHeight)
+      // console.log(`第 ${i + 1} 行高度:`, rowHeightArr[i], '累计高度:', sumHeight, '容器高度：', containerHeight)
       if (sumHeight > containerHeight) {
         // 如果最后一行是标题，回退一行
         if (i > 0 && data[i - 2].title) {

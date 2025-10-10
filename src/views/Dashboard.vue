@@ -1,20 +1,161 @@
 <!--
  * @Date: 2025-10-08 16:48:01
  * @LastEditors: Newcy4 newcy44@gmail.com
- * @LastEditTime: 2025-10-09 18:24:51
+ * @LastEditTime: 2025-10-10 15:55:59
  * @FilePath: /price-displayer/src/views/Dashboard.vue
 -->
 <template>
-  <div>
-    <h1>Dashboard</h1>
-    <button @click="$router.push('/')">回到首页</button>
+  <div class="dashboard-container">
+    <el-header>
+<el-button @click="$router.push('/')">回到首页</el-button>
+    </el-header>
+    <el-main>
+    <el-row :gutter="0" justify="space-around">
+      <el-col v-for="itemData in tableData" :span="4">
+        <div
+          style="height: 50px;width: 100%; background-color: #ecf5ff; font-size:25px; line-height: 50px; text-align: center; color: #409eff;">
+          {{ itemData.category }}</div>
+        <el-table :data="itemData.data" style="width: 100%" max-height="550" highlight-current-row scrollbar-always-on>
+          <el-table-column prop="name" label="菜品" align="center" />
+          <el-table-column prop="ingredients" label="主料/做法" align="center">
+            <template #default="scope">
+              <div v-if="scope.row.title">{{ scope.row.title }}</div>
+              <span v-else>{{scope.row.ingredients.length > 0 ? scope.row.ingredients.map(i =>
+                `${i.name}元/${i.weight}`).join('、') : scope.row.method.join('/')}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="price" label="价格" align="center">
+            <template #default="scope">
+              {{scope.row.specifications.map(i => `${i.price}元/${i.unit}`).join('、')}}
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" align="center">
+            <template #default="scope">
+              <el-button type="primary" plain round @click="changeData(scope.row)">修改</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-col>
+    </el-row>
+    </el-main>
+
+    <el-dialog v-model="isDialogVisible" title="修改菜品信息" width="500">
+      <el-form :model="formData">
+        <el-form-item label="菜名" label-width="50px">
+          <el-input v-model="formData.name" autocomplete="off" />
+        </el-form-item>
+        <el-divider border-style="dashed" />
+        <el-form-item v-if="isSpecialtyDish" label="主料" label-width="50px">
+          <el-table :data="formData.ingredients" style="width: 100%">
+            <el-table-column prop="name" label="主料" align="center">
+              <template #default="scope">
+                <el-input v-model="scope.row.name" autocomplete="off" />
+              </template>
+            </el-table-column>
+            <el-table-column prop="weight" label="重量" align="center">
+              <template #default="scope">
+                <el-input v-model="scope.row.weight" autocomplete="off" />
+              </template>
+            </el-table-column>
+            <el-table-column label="操作" align="center">
+              <template #default="scope">
+                <el-button type="primary" plain round
+                  @click="formData.ingredients.splice(scope.$index, 1)">删除</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+          <el-button class="mt-4" style="width: 100%" @click="formData.ingredients.push({ name: '', weight: '' })">
+            添加主料
+          </el-button>
+        </el-form-item>
+        <el-form-item v-else label="做法" label-width="50px">
+          <el-input-tag v-model="formData.method" placeholder="请输入做法，然后 Enter 回车保存"
+            aria-label="请输入做法，然后 Enter 回车保存" />
+        </el-form-item>
+        <el-divider border-style="dashed" />
+        <!-- <el-form-item label="Zones" label-width="140px">
+        <el-select v-model="formData.name" placeholder="Please select a zone">
+          <el-option label="Zone No.1" value="shanghai" />
+          <el-option label="Zone No.2" value="beijing" />
+        </el-select>
+      </el-form-item> -->
+      </el-form>
+      <template #footer>
+      <div class="dialog-footer">
+        <el-button style="float: left;" type="warning" @click="resetData(formData)">重置数据</el-button>
+        <el-button @click="isDialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="saveData">保存</el-button>
+      </div>
+    </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup>
+// import foodData from '../testdata.js'
+import { ref } from 'vue'
+
+const cateSort = ['招牌', '鱼类', '虾类', '蟹类', '贝类']
+const isDialogVisible = ref(false)
+
+// const specData = ref(...foodData.filter(item => item.category === '招牌'))
+// console.log('specData',foodData, specData.value)
+// const fishData = ref(...foodData.filter(item => item.category === '鱼类'))
+// const shrimpData = ref(...foodData.filter(item => item.category === '虾类'))
+// const crabData = ref(...foodData.filter(item => item.category === '蟹类'))
+// const shellData = ref(...foodData.filter(item => item.category === '贝类'))
+
+const foodData = JSON.parse(localStorage.getItem('foodData') || '[]')
+
+const tableData = ref(cateSort.map(cate => {
+  // console.log('测试', foodData.filter(item => item.category === cate)[0].data)
+  return {
+    category: cate,
+    data: foodData.length > 0 ? foodData.filter(item => item.category === cate)[0].data.map((d, i) => ({ ...d, category: cate, index: i })) : []  // 深拷贝，避免修改原数据
+  }
+}))
+// console.log('tableData', tableData.value)
+
+const formData = ref({})
+const isSpecialtyDish = ref(false)   // 是不是招牌菜
+
+const tempFormData = ref({}) // 临时存储修改前的数据，取消时恢复
+
+function changeData(row) {
+  tempFormData.value = row  // 备份当前数据
+  const data = JSON.parse(JSON.stringify(row)) // 深拷贝，避免修改原数据
+  formData.value = data
+  console.log('formData', formData.value)
+  if (row.category == '招牌') { // 如果是招牌菜显示主料，否则显示做法
+    isSpecialtyDish.value = true
+  } else {
+    isSpecialtyDish.value = false
+  }
+  isDialogVisible.value = true
+}
+
+
+function resetData (data) {
+  formData.value = tempFormData.value
+}
+
+function saveData() {
+  // 保存数据到 tableData
+  const cate = formData.value.category
+  const index = formData.value.index
+  const cateData = tableData.value.find(item => item.category === cate)
+  if (cateData) {
+    cateData.data[index] = formData.value
+  }
+  localStorage.setItem('foodData', JSON.stringify(tableData.value))  // 保存到本地存储
+  isDialogVisible.value = false
+}
 
 </script>
 
-<style scoped>
-
+<style scoped lang="scss">
+:deep(.el-divider) {
+  margin-top: 0;
+  margin-bottom: 15px;
+}
 </style>
