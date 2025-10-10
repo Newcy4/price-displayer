@@ -19,6 +19,7 @@
     "fullscreen": false,
     "resizable": true
   },
+  "chromium-args": "--autoplay-policy=no-user-gesture-required",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

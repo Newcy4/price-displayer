@@ -2,16 +2,21 @@
   <div class="price-container">
     <!-- 轮播图 -->
     <div class="left">
-      <div class="logo"  @click="$router.push('/dashboard')">
+      <div class="logo" @click="$router.push('/dashboard')">
         <img src="../assets/logo.png" alt="">
       </div>
-      <img v-if="true" class="swiper" src="../assets/images/2.jpg" alt="swiper image" />
-      <swiper v-else class="swiper" :spaceBetween="30" :effect="'fade'" :speed="2000" :pagination="{
+      <video class="swiper" v-if="false" src="../../public/宣传视频.mp4" controls autoplay muted loop
+        controlsList="nodownload nofullscreen" disablePictureInPicture playsinline preload="auto" crossorigin="anonymous">
+        <source src="../../public/宣传视频.mp4" type="video/mp4">
+        您的浏览器不支持HTML5视频
+      </video>
+      <img v-if="false" class="swiper" src="../assets/images/2.jpg" alt="swiper image" />
+      <swiper v-if="true" class="swiper" :spaceBetween="30" :effect="'fade'" :speed="2000" :pagination="{
         clickable: true,
       }" :autoplay="{
-      delay: 2500,
-      disableOnInteraction: false,
-    }" :loop="true" :modules="modules">
+        delay: 2500,
+        disableOnInteraction: false,
+      }" :loop="true" :modules="modules">
         <swiper-slide v-for="slide in slides" :key="slide.id">
           <img :src="slide.src" class="swiper-img">
         </swiper-slide>
@@ -138,10 +143,10 @@ const slides = ref(
 // const modules = [EffectFade, Navigation, Pagination]
 const modules = [EffectFade, Autoplay]
 // 菜品表格数据
-let tableData =  ref([])
+let tableData = ref([])
 if (localData.length > 0) {
   tableData.value = localData
-  console.log('使用本地存储的数据',tableData.value)
+  console.log('使用本地存储的数据', tableData.value)
 } else {
   tableData.value = foodData
   console.log('使用默认的测试数据', tableData.value)
@@ -289,10 +294,10 @@ onMounted(() => {
   align-items: center;
   justify-content: space-around;
   // background-image: url("../assets/bg/\(1\).jpg");
-  background-image: url("../assets/bg/\(2\).jpg");  // 浅色背景
+  background-image: url("../assets/bg/\(2\).jpg"); // 浅色背景
   // background-image: linear-gradient(rgba(7, 0, 49, 0.7), rgba(7, 0, 49, 0.7)),  url("../assets/bg/\(2\).jpg");  // 浅色背景
   // background-image: linear-gradient(rgba(7, 0, 49, 0.5), rgba(7, 0, 49, 0.5)),  url("../assets/bg/黑白页岩\ \(54\).jpg");  // 深色背景
-  
+
   // background-image: url("../assets/bg/\(3\).jpg");
   // background-image: url("../assets/bg/黑白页岩\ \(54\).jpg");   // 深色背景
   // background-image: url("../assets/bg/黑白页岩\ \(68\).jpg");
@@ -345,23 +350,24 @@ onMounted(() => {
       & .el-table {
         background-color: transparent;
         // color: #fff; //深色背景
-        color: #212121;   //浅色背景
+        color: #212121; //浅色背景
+
         & :deep(.el-table__inner-wrapper)::before {
           height: 0.5px;
-          background-color: #616161 !important;  //浅色主题
+          background-color: #616161 !important; //浅色主题
         }
       }
 
       & :deep(.table-header) {
         background-color: transparent;
         // color: #fff; //深色背景
-        color: #212121;  //浅色背景
+        color: #212121; //浅色背景
         font-size: 23px;
       }
 
       & :deep(.table-header-cell) {
         background-color: transparent;
-        border-bottom-color: #616161 !important;  //浅色背景
+        border-bottom-color: #616161 !important; //浅色背景
       }
 
       & :deep(.table-row) {
@@ -379,7 +385,7 @@ onMounted(() => {
 
       & :deep(.table-cell) {
         background-color: transparent;
-        border-bottom-color: #616161 !important;  //浅色背景
+        border-bottom-color: #616161 !important; //浅色背景
       }
     }
 

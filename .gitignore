@@ -34,3 +34,5 @@ src/assets
 *.sw?
 
 *.tsbuildinfo
+
+public/*.mp4

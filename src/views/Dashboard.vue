@@ -1,7 +1,7 @@
 <!--
  * @Date: 2025-10-08 16:48:01
  * @LastEditors: Newcy4 newcy44@gmail.com
- * @LastEditTime: 2025-10-10 17:28:33
+ * @LastEditTime: 2025-10-10 17:36:44
  * @FilePath: /price-displayer/src/views/Dashboard.vue
 -->
 <template>
