@@ -12,14 +12,19 @@
         <source src="../../public/宣传视频.mp4" type="video/mp4">
         您的浏览器不支持HTML5视频
       </video> -->
-      <img v-if="false" class="swiper" src="../assets/images/2.jpg" alt="swiper image" />
-      <swiper v-if="true" class="swiper" :spaceBetween="30" :effect="'fade'" :speed="2000" :pagination="{
+      <!-- <img v-if="true" class="swiper" src="../assets/images/2.jpg" alt="swiper image" /> -->
+       <!-- 如果想使用淡入淡出可以加上effect="fade"，但是如果是这样文字显示会出问题 -->
+      <swiper v-if="true" class="swiper" :spaceBetween="30" effect="fade" :speed="2000" :pagination="{
         clickable: true,
       }" :autoplay="{
         delay: 2500,
         disableOnInteraction: false,
       }" :loop="true" :modules="modules">
         <swiper-slide v-for="slide in slides" :key="slide.id">
+          <!-- 下往上渐变 -->
+          <div class="swiper-mask">
+            <span>{{slide.name}}</span>
+          </div>
           <img :src="slide.src" class="swiper-img">
         </swiper-slide>
       </swiper>
@@ -132,15 +137,55 @@ import 'swiper/css/effect-fade'
 import 'swiper/css/pagination'
 
 const localData = JSON.parse(localStorage.getItem('foodData') || '[]')
+localData.forEach(item => {
+  if (item && item.data && Array.isArray(item.data)) {
+    item.data = item.data.filter(dish => {
+      return !dish.isTakenDown
+    })
+  }
+});
+
 
 import { ref, onMounted, nextTick, watch } from 'vue'
+
+// 动态获取文件夹内图片的名称
+const imgFiles =  import.meta.glob('../assets/images/*.jpg', { eager: true })
+console.log('import.meta.glob', imgFiles)
+console.log('import.meta.glob ket', Object.keys(imgFiles))
+
+const tempImgFilesArr = []
+for (const path in imgFiles) {
+  const resolvedPath = imgFiles[path].default
+  console.log('图片路径path：', path, '解析后的路径：', resolvedPath)
+  let matchResult = path.match(/(\d+[^.]*)\.jpg$/)
+  if (!matchResult) console.log('无法匹配图片名称：', path)
+  let imgName = matchResult[1]  // 数字开头，.jpg 结尾
+  let id = parseInt(imgName.split('-')[0])  // 取数字部分作为id
+  let name = imgName.split('-')[1]  // 取数字部分作为id
+  console.log('图片名称：', imgName, 'id:', id, 'name:', name)
+  tempImgFilesArr.push({
+    id,
+    name,
+    src: resolvedPath
+  })
+}
+
+console.log('生成后的数据对象', tempImgFilesArr)
+
 // 动态生成图片路径数组
-const slides = ref(
-  Array.from({ length: 10 }, (_, i) => ({
-    id: i + 1,
-    src: new URL(`../assets/images/${i + 1}.jpg`, import.meta.url).href
-  }))
-)
+let slides = ref([])
+slides.value = tempImgFilesArr
+  // Array.from({ length: 10 }, (_, i) => ({
+  //   id: i + 1,
+  //   src: new URL(`../assets/images/${i + 1}.jpg`, import.meta.url).href
+  // }))
+  // [
+  //   { id: 1, src: new URL(`../assets/images/2.jpg`, import.meta.url).href, name: "牛仔骨" },
+  //   { id: 2, src: new URL(`../assets/images/4.jpg`, import.meta.url).href, name: "大闸蟹" },
+  //   { id: 3, src: new URL(`../assets/images/6.jpg`, import.meta.url).href, name: "波士顿龙虾" },
+  //   { id: 4, src: new URL(`../assets/images/8.jpg`, import.meta.url).href, name: "芝士常在" },
+  //   { id: 5, src: new URL(`../assets/images/10.jpg`, import.meta.url).href, name: "就该死的" },
+  // ]
 
 // const modules = [EffectFade, Autoplay, Pagination]
 // const modules = [EffectFade, Navigation, Pagination]
@@ -325,6 +370,30 @@ onMounted(() => {
       height: 675px;
       // border: 2px solid #000;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+      position: relative;
+    }
+
+    .swiper-mask {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 100px;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0));
+      display: flex;
+      align-items: center;
+      justify-content: end;
+      z-index: 10;
+      font-family: 'STKaiti';
+
+      span {
+        color: #d4d4d4;
+        font-size: 50px;
+        font-weight: bold;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+        margin-right: 100px;
+        margin-bottom: 25px;
+      }
     }
 
     .swiper-img {
@@ -399,12 +468,12 @@ onMounted(() => {
 
     :deep(.food-name-size) {
       font-size: 21px;
-      font-weight: bold;
+      // font-weight: bold;
     }
 
     :deep(.prize-size) {
       font-size: 18px;
-      font-weight: bold;
+      // font-weight: bold;
 
       & .price {
         font-size: 21px;
@@ -413,7 +482,7 @@ onMounted(() => {
 
     :deep(.method-size) {
       font-size: 16px;
-      font-weight: bold;
+      // font-weight: bold;
     }
   }
 }

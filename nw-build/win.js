@@ -1,7 +1,7 @@
 /*
  * @Date: 2025-10-09 16:58:47
  * @LastEditors: Newcy4 newcy44@gmail.com
- * @LastEditTime: 2025-10-09 18:12:52
+ * @LastEditTime: 2025-10-17 20:30:21
  * @FilePath: /price-displayer/nw-build/win.js
  * @Description: nw 打包配置文件 window 版本
  */
