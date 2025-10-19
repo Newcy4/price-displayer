@@ -1,7 +1,7 @@
 <!--
  * @Date: 2025-10-08 16:48:01
  * @LastEditors: Newcy4 newcy44@gmail.com
- * @LastEditTime: 2025-10-17 20:28:27
+ * @LastEditTime: 2025-10-19 22:55:04
  * @FilePath: /price-displayer/src/views/Dashboard.vue
 -->
 <template>
@@ -11,6 +11,7 @@
       <img src="../../public/icon.ico" alt="" style="margin-left: 30px; height: 40px;">
       <h1 style="font-weight: bold; font-size: 30px; margin-left: 10px;">杭越菜品数据管理后台</h1>
       <el-button type="primary" @click="$router.push('/')" style="margin-left: 30px;">回到首页</el-button>
+      <el-button v-if="isNW()" type="primary" @click="$router.push('/mediaDashboard')" style="margin-left: 30px;">多媒体控制</el-button>
       <el-button type="danger" plain style="margin-left: auto;" @click="deleteAllData">恢复出厂数据</el-button>
     </el-header>
     <el-main>
@@ -129,7 +130,14 @@
 import localData from '../testdata.js'
 import { ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { isNW } from '@/utils/nwUtils';
 
+if(isNW()){
+  console.log('当前运行环境：NW.js');
+  nw.App.dataPath && console.log('应用数据路径:', nw.App.dataPath);
+} else {
+  console.log('当前运行环境：Web');
+}
 
 const cateSort = ['招牌', '鱼类', '虾类', '蟹类', '贝类']
 const isDialogVisible = ref(false)

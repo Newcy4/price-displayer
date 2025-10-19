@@ -7,11 +7,11 @@
         <img src="../assets/logo.png" alt="">
       </div>
       <!-- 解除注释就可以使用 -->
-      <!-- <video class="swiper" v-if="false" src="../../public/宣传视频.mp4" controls autoplay muted loop
+      <video class="swiper" v-if="false" :src="videoPath" controls autoplay muted loop
         controlsList="nodownload nofullscreen" disablePictureInPicture playsinline preload="auto" crossorigin="anonymous">
-        <source src="../../public/宣传视频.mp4" type="video/mp4">
+        <source :src="videoPath"  type="video/mp4">
         您的浏览器不支持HTML5视频
-      </video> -->
+      </video>
       <!-- <img v-if="true" class="swiper" src="../assets/images/2.jpg" alt="swiper image" /> -->
        <!-- 如果想使用淡入淡出可以加上effect="fade"，但是如果是这样文字显示会出问题 -->
       <swiper v-if="true" class="swiper" :spaceBetween="30" effect="fade" :speed="2000" :pagination="{
@@ -135,6 +135,20 @@ import FullscreenToggle from '@/components/FullscreenToggle.vue';
 import 'swiper/css'
 import 'swiper/css/effect-fade'
 import 'swiper/css/pagination'
+import { isNW } from '@/utils/nwUtils';
+
+let videoPath = '../../public/宣传视频.mp4'
+
+if(isNW()){
+  console.log('当前运行环境：NW.js');
+  nw.App.dataPath && console.log('应用数据路径:', nw.App.dataPath);
+  const path = window.require('path');
+  const saveDir = path.resolve(nw.App.dataPath, 'videos');
+  videoPath = 'file://' + path.join(saveDir, 'video.mp4')  // 视频路径
+  console.log('视频路径:', videoPath);
+} else {
+  console.log('当前运行环境：Web');
+}
 
 const localData = JSON.parse(localStorage.getItem('foodData') || '[]')
 localData.forEach(item => {
