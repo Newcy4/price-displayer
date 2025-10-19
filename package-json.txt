@@ -20,6 +20,7 @@
     "fullscreen": false,
     "resizable": true
   },
+  "chromium-args": "--allow-file-access --allow-file-access-from-files",   // nw 本地视频访问权限
   "scripts": {
     "dev": "vite",
     "build": "vite build",

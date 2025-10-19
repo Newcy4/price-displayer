@@ -7,14 +7,14 @@
         <img src="../assets/logo.png" alt="">
       </div>
       <!-- 解除注释就可以使用 -->
-      <video class="swiper" v-if="false" :src="videoPath" controls autoplay muted loop
+      <video class="swiper" v-if="true" :src="videoPath" controls autoplay muted loop
         controlsList="nodownload nofullscreen" disablePictureInPicture playsinline preload="auto" crossorigin="anonymous">
         <source :src="videoPath"  type="video/mp4">
         您的浏览器不支持HTML5视频
       </video>
       <!-- <img v-if="true" class="swiper" src="../assets/images/2.jpg" alt="swiper image" /> -->
        <!-- 如果想使用淡入淡出可以加上effect="fade"，但是如果是这样文字显示会出问题 -->
-      <swiper v-if="true" class="swiper" :spaceBetween="30" effect="fade" :speed="2000" :pagination="{
+      <swiper v-if="false" class="swiper" :spaceBetween="30" effect="fade" :speed="2000" :pagination="{
         clickable: true,
       }" :autoplay="{
         delay: 2500,
