@@ -6,15 +6,17 @@
       <div class="logo" @click="$router.push('/dashboard')">
         <img src="../assets/logo.png" alt="">
       </div>
-      <!-- 解除注释就可以使用 -->
-      <video class="swiper" v-if="true" :src="videoPath" controls autoplay muted loop
+      <!-- 视频播放 -->
+      <video class="swiper" v-if="playMode == 1" :src="videoPath" controls autoplay muted loop
         controlsList="nodownload nofullscreen" disablePictureInPicture playsinline preload="auto" crossorigin="anonymous">
         <source :src="videoPath"  type="video/mp4">
         您的浏览器不支持HTML5视频
       </video>
+
+      <!-- 默认轮播图 -->
       <!-- <img v-if="true" class="swiper" src="../assets/images/2.jpg" alt="swiper image" /> -->
        <!-- 如果想使用淡入淡出可以加上effect="fade"，但是如果是这样文字显示会出问题 -->
-      <swiper v-if="false" class="swiper" :spaceBetween="30" effect="fade" :speed="2000" :pagination="{
+      <swiper v-if="playMode == 2" class="swiper" :spaceBetween="30" effect="fade" :speed="2000" :pagination="{
         clickable: true,
       }" :autoplay="{
         delay: 2500,
@@ -26,6 +28,22 @@
             <span>{{slide.name}}</span>
           </div>
           <img :src="slide.src" class="swiper-img">
+        </swiper-slide>
+      </swiper>
+
+      <!-- 自定义轮播图 -->
+      <swiper v-if="playMode == 3" class="swiper" :spaceBetween="30" effect="fade" :speed="2000" :pagination="{
+        clickable: true,
+      }" :autoplay="{
+        delay: 2500,
+        disableOnInteraction: false,
+      }" :loop="true" :modules="modules">
+        <swiper-slide v-for="slide in localImgData" :key="slide.name">
+          <!-- 下往上渐变 -->
+          <div class="swiper-mask">
+            <span>{{ slide.alias || slide.name.split('.')[0]}}</span>
+          </div>
+          <img :src="slide.preview" class="swiper-img">
         </swiper-slide>
       </swiper>
     </div>
@@ -150,6 +168,14 @@ if(isNW()){
   console.log('当前运行环境：Web');
 }
 
+// 获取播放模式
+const playMode = parseInt(localStorage.getItem('play-mode') || 2)
+
+// 获取照片数据
+const localImgData = JSON.parse(localStorage.getItem('localImgData') || '[]')
+console.log('本地照片数据：', localImgData)
+
+// 获取菜单数据
 const localData = JSON.parse(localStorage.getItem('foodData') || '[]')
 localData.forEach(item => {
   if (item && item.data && Array.isArray(item.data)) {
